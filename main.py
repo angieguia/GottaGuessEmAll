@@ -85,5 +85,5 @@ async def start(ctx, difficulty: str, *types: str):
     else:
         await ctx.send("No Pokemon found matching the specified criteria.")
 
-client.run("MTIxMTE0NzU3MjQxMzA3MTQ0MQ.GgoUXy.iTO-lMG4Yo-NekzCd142HddZiInXl30Tz-qKfw")
+client.run("MTIxMTE0NzU3MjQxMzA3MTQ0MQ.Gu2Yp2.Ey9BDU2ElstfIlPEAQ-Uz0sxFENUtBk7qNABJc")
 
