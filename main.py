@@ -72,16 +72,12 @@ async def start(ctx, difficulty: str, *types: str):
 
         def check(m):
             return m.channel == ctx.channel and m.content.lower() == pokemon_name.lower()
-
-        try:
-            user_guess = await client.wait_for('message', check=check)
-            congrats_embed = discord.Embed(title="Congratulations!",
+        user_guess = await client.wait_for('message', check=check)
+        congrats_embed = discord.Embed(title="Congratulations!",
                                            description=f"Correct! {user_guess.author.mention} guessed the Pokemon name correctly: **{pokemon_name}**",
                                            color=0xFFD700)
-            congrats_embed.set_image(url="https://giffiles.alphacoders.com/130/130540.gif")
-            await ctx.send(embed=congrats_embed)
-        except:
-            await ctx.send("No one guessed the Pokemon name.")
+        congrats_embed.set_image(url="https://giffiles.alphacoders.com/130/130540.gif")
+        await ctx.send(embed=congrats_embed)
     else:
         await ctx.send("No Pokemon found matching the specified criteria.")
 
