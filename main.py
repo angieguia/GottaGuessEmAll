@@ -32,9 +32,11 @@ async def start(ctx, difficulty: str, *types: str):
         await ctx.send("Invalid difficulty level. Please specify easy, medium, or hard.")
         return
 
-    if not types:
-        await ctx.send("Please specify at least one Pokemon type: water, fire, grass, electric, etc.")
-        return
+    if 'all' in types:
+        if len(types) > 1:
+            await ctx.send("Cannot specify other types along with 'all'.")
+            return
+        types = ['all']
 
     pokemon_list = []
 
@@ -57,7 +59,7 @@ async def start(ctx, difficulty: str, *types: str):
 
             pokemon_name = pokemon_data['name']
             pokemon_types = [t['type']['name'] for t in pokemon_data['types']]
-            if any(p_type in types for p_type in pokemon_types):
+            if 'all' in types or any(p_type in types for p_type in pokemon_types):
                 pokemon_image_url = pokemon_data['sprites']['front_default']
                 pokemon_list.append((pokemon_name, pokemon_image_url))
 
@@ -72,14 +74,17 @@ async def start(ctx, difficulty: str, *types: str):
 
         def check(m):
             return m.channel == ctx.channel and m.content.lower() == pokemon_name.lower()
-        user_guess = await client.wait_for('message', check=check)
-        congrats_embed = discord.Embed(title="Congratulations!",
+
+        try:
+            user_guess = await client.wait_for('message', check=check)
+            congrats_embed = discord.Embed(title="Congratulations!",
                                            description=f"Correct! {user_guess.author.mention} guessed the Pokemon name correctly: **{pokemon_name}**",
                                            color=0xFFD700)
-        congrats_embed.set_image(url="https://giffiles.alphacoders.com/130/130540.gif")
-        await ctx.send(embed=congrats_embed)
+            congrats_embed.set_image(url="https://giffiles.alphacoders.com/130/130540.gif")
+            await ctx.send(embed=congrats_embed)
+        except:
+            await ctx.send("No one guessed the Pokemon name.")
     else:
         await ctx.send("No Pokemon found matching the specified criteria.")
 
 client.run(DISCORDTOKEN)
-
